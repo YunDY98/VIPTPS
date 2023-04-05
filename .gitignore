@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/windows,unrealengine,visualstudio
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,unrealengine,visualstudio
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudio,unrealengine,windows
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,unrealengine,windows
 
 ### UnrealEngine ###
 # Visual Studio 2015 user specific files
@@ -18,7 +18,7 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*
+*.dll
 
 # Fortran module files
 *.mod
@@ -27,7 +27,8 @@
 *.lai
 *.la
 *.a
-*
+*.lib
+
 # Executables
 *.exe
 *.out
@@ -507,4 +508,4 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,unrealengine,visualstudio
+# End of https://www.toptal.com/developers/gitignore/api/visualstudio,unrealengine,windows
