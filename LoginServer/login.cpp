@@ -18,7 +18,7 @@ using namespace std;
 #pragma comment (lib, "WS2_32.lib")
 #pragma comment (lib, "debug/mysqlcppconn.lib")
 //
-#define SERVER_IPV4 "127.0.0.1"
+#define SERVER_IPV4 "220.69.218.216"
 #define SERVER_PORT 5959
 #define PACKET_SIZE 100
 #define PACKET_ID 20
