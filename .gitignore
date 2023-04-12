@@ -1,6 +1,12 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,unrealengine,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,unrealengine,windows
 
+
+# Remove Resource directory
+/Content/Windmills
+/Content/BloodFX
+
+
 ### UnrealEngine ###
 # Visual Studio 2015 user specific files
 .vs/

@@ -10,6 +10,9 @@
 #include "ShootingGameHUD.h"
 #include "ShootingGameInstance.h"
 #include "ShootingPlayerState.h"
+#include "NiagaraComponent.h"  // 나이아가라 컴포넌트 헤더 파일
+#include "NiagaraFunctionLibrary.h"  // 나이아가라 함수 라이브러리 헤더 파일
+#include "NiagaraSystem.h"  // 나이아가라 시스템 헤더 파일
 
 // Sets default values
 AWeapon::AWeapon()
@@ -221,6 +224,24 @@ void AWeapon::ReqShoot_Implementation(const FVector vStart, const FVector vEnd)
 		if (HitChar)
 		{
 			UGameplayStatics::ApplyDamage(HitChar, 10, OwnChar->GetController(), this, UDamageType::StaticClass());
+			//
+			// 나이아가라 시스템 애셋 로드
+			FString NiagaraSystemPath = "NiagaraSystem'/Game/BloodFX/FX/NS_BloodImpact_Medium.NS_BloodImpact_Medium'"; // 나이아가라 시스템 애셋의 경로
+			UNiagaraSystem* NiagaraSystem = Cast<UNiagaraSystem>(StaticLoadObject(UNiagaraSystem::StaticClass(), nullptr, *NiagaraSystemPath));
+
+			// 나이아가라 시스템 컴포넌트 생성 및 초기화
+			if (NiagaraSystem)
+			{
+				FVector HitLocation = result.Location; // 맞은 위치
+				FRotator HitRotation = result.ImpactNormal.Rotation(); // 맞은 위치의 법선을 회전값으로 변환하여 컴포넌트의 초기 회전값으로 사용
+				UNiagaraComponent* NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, HitLocation,HitRotation);
+				if (NiagaraComponent)
+				{
+					NiagaraComponent->ActivateSystem();
+					NiagaraComponent->SetAutoDestroy(true);
+					NiagaraComponent->RegisterComponent();
+				}
+			}
 		}
 	}
 }

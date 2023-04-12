@@ -15,6 +15,9 @@
 #include "TimerManager.h"
 #include "Blueprint/UserWidget.h"
 #include "NameTagInterface.h"
+//#include "NiagaraComponent.h"  // 나이아가라 컴포넌트 헤더 파일
+//#include "NiagaraFunctionLibrary.h"  // 나이아가라 함수 라이브러리 헤더 파일
+//#include "NiagaraSystem.h"  // 나이아가라 시스템 헤더 파일
 
 //////////////////////////////////////////////////////////////////////////
 // AShootingGameCharacter
@@ -91,6 +94,21 @@ float AShootingGameCharacter::TakeDamage(float DamageAmount, FDamageEvent const&
 	if (ps)
 	{
 		ps->AddDamage(DamageAmount);
+		// 나이아가라 시스템 애셋 로드
+		//FString NiagaraSystemPath = "NiagaraSystem'/Game/BloodFX/FX/NS_BloodImpact_Medium.NS_BloodImpact_Medium'"; // 나이아가라 시스템 애셋의 경로
+		//UNiagaraSystem* NiagaraSystem = Cast<UNiagaraSystem>(StaticLoadObject(UNiagaraSystem::StaticClass(), nullptr, *NiagaraSystemPath));
+
+		//// 나이아가라 시스템 컴포넌트 생성 및 초기화
+		//if (NiagaraSystem)
+		//{
+		//	UNiagaraComponent* NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, GetActorLocation());
+		//	if (NiagaraComponent)
+		//	{
+		//		NiagaraComponent->ActivateSystem();
+		//		NiagaraComponent->SetAutoDestroy(true);
+		//		NiagaraComponent->RegisterComponent();
+		//	}
+		//}
 	}
 
 	return 0.0f;
