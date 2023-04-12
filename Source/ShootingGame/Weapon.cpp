@@ -2,6 +2,11 @@
 
 
 #include "Weapon.h"
+
+#include "NiagaraComponent.h"  // 나이아가라 컴포넌트 헤더 파일
+#include "NiagaraFunctionLibrary.h"  // 나이아가라 함수 라이브러리 헤더 파일
+#include "NiagaraSystem.h"  // 나이아가라 시스템 헤더 파일
+
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
@@ -10,9 +15,7 @@
 #include "ShootingGameHUD.h"
 #include "ShootingGameInstance.h"
 #include "ShootingPlayerState.h"
-#include "NiagaraComponent.h"  // 나이아가라 컴포넌트 헤더 파일
-#include "NiagaraFunctionLibrary.h"  // 나이아가라 함수 라이브러리 헤더 파일
-#include "NiagaraSystem.h"  // 나이아가라 시스템 헤더 파일
+
 
 // Sets default values
 AWeapon::AWeapon()
@@ -84,6 +87,7 @@ void AWeapon::NotifyShoot_Implementation()
 		FVector end = (forward * 5000) + shooter->PlayerCameraManager->GetCameraLocation();
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Client - ReqShoot")));
 		ReqShoot(start, end);
+		ReqBlood(start, end);
 	}
 }
 
@@ -206,6 +210,8 @@ void AWeapon::SetRowName(FName name)
 	OnRep_RowName();
 }
 
+
+
 void AWeapon::ReqShoot_Implementation(const FVector vStart, const FVector vEnd)
 {
 	if (UseAmmo() == false)
@@ -214,7 +220,7 @@ void AWeapon::ReqShoot_Implementation(const FVector vStart, const FVector vEnd)
 	FHitResult result;
 	bool isHit = GetWorld()->LineTraceSingleByObjectType(result, vStart, vEnd, ECollisionChannel::ECC_Pawn);
 
-	DrawDebugLine(GetWorld(), vStart, vEnd, FColor::Yellow, false, 5.0f);
+	//DrawDebugLine(GetWorld(), vStart, vEnd, FColor::Yellow, false, 5.0f);
 
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Server - ReqShoot")));
 
@@ -224,7 +230,32 @@ void AWeapon::ReqShoot_Implementation(const FVector vStart, const FVector vEnd)
 		if (HitChar)
 		{
 			UGameplayStatics::ApplyDamage(HitChar, 10, OwnChar->GetController(), this, UDamageType::StaticClass());
-			//
+			
+			
+		}
+	}
+
+
+}
+
+
+
+void  AWeapon::ResBlood_Implementation(const FVector vStart, const FVector vEnd)
+{
+	if (UseAmmo() == false)
+		return;
+
+	FHitResult result;
+	bool isHit = GetWorld()->LineTraceSingleByObjectType(result, vStart, vEnd, ECollisionChannel::ECC_Pawn);
+
+	
+	if (isHit)
+	{
+		ACharacter* HitChar = Cast<ACharacter>(result.GetActor());
+		if (HitChar)
+		{
+			
+			
 			// 나이아가라 시스템 애셋 로드
 			FString NiagaraSystemPath = "NiagaraSystem'/Game/BloodFX/FX/NS_BloodImpact_Medium.NS_BloodImpact_Medium'"; // 나이아가라 시스템 애셋의 경로
 			UNiagaraSystem* NiagaraSystem = Cast<UNiagaraSystem>(StaticLoadObject(UNiagaraSystem::StaticClass(), nullptr, *NiagaraSystemPath));
@@ -234,7 +265,7 @@ void AWeapon::ReqShoot_Implementation(const FVector vStart, const FVector vEnd)
 			{
 				FVector HitLocation = result.Location; // 맞은 위치
 				FRotator HitRotation = result.ImpactNormal.Rotation(); // 맞은 위치의 법선을 회전값으로 변환하여 컴포넌트의 초기 회전값으로 사용
-				UNiagaraComponent* NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, HitLocation,HitRotation);
+				UNiagaraComponent* NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, HitLocation, HitRotation);
 				if (NiagaraComponent)
 				{
 					NiagaraComponent->ActivateSystem();
@@ -244,5 +275,11 @@ void AWeapon::ReqShoot_Implementation(const FVector vStart, const FVector vEnd)
 			}
 		}
 	}
+
+
 }
 
+void  AWeapon::ReqBlood_Implementation(const FVector vStart, const FVector vEnd)
+{
+	ResBlood(vStart, vEnd);
+}

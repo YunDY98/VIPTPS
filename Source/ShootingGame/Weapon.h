@@ -8,6 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+
 USTRUCT(BlueprintType)
 struct FST_Weapon : public FTableRowBase
 {
@@ -142,4 +143,17 @@ public:
 
 	UPROPERTY(ReplicatedUsing = OnRep_Ammo)
 	int Ammo;
+
+public:
+	UFUNCTION(NetMulticast, Reliable)
+		void ResBlood(const FVector vStart, const FVector vEnd);
+
+	UFUNCTION(Server, Reliable)
+		void ReqBlood(const FVector vStart, const FVector vEnd);
+
+
+	
 };
+	
+	
+
