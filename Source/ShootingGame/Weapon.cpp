@@ -84,7 +84,7 @@ void AWeapon::NotifyShoot_Implementation()
 		FVector forward = shooter->PlayerCameraManager->GetActorForwardVector();
 
 		FVector start = (forward * 350) + shooter->PlayerCameraManager->GetCameraLocation();
-		FVector end = (forward * 5000) + shooter->PlayerCameraManager->GetCameraLocation();
+		FVector end = (forward * 50000) + shooter->PlayerCameraManager->GetCameraLocation();
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Client - ReqShoot")));
 		ReqShoot(start, end);
 		ReqBlood(start, end);
