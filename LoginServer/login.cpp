@@ -160,7 +160,7 @@ unsigned WINAPI Chatting(void* arg)
 			{
 
 				sID.erase(sID.begin());
-				pstmt = con->prepareStatement("select * from meminfo where ID = ? and PWD = ?");
+				pstmt = con->prepareStatement("select * from meminfo where ID = ? and PWD = sha(?)");
 				pstmt->setString(1, sID);
 				pstmt->setString(2, sPWD);
 				pstmt->execute();
