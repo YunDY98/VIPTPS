@@ -351,6 +351,33 @@ void AShootingGameCharacter::ResPickUp_Implementation(AActor* weapon)
 	AttachWeapon(weapon);
 }
 
+
+
+
+
+void AShootingGameCharacter::ReqGameEnd_Implementation()
+{
+	ResGameEnd();
+
+}
+
+void AShootingGameCharacter::ResGameEnd_Implementation()
+{
+	if (WBP_GameEnd)
+	{
+		// Create the UI widget
+		UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameEnd);
+		if (WBP_GameEnd)
+		{
+			// Add the UI widget to the viewport
+			MyBlueprintUIWidget->AddToViewport();
+			APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+			MyController->SetInputMode(FInputModeUIOnly());
+			MyController->bShowMouseCursor = true;
+		}
+	}
+	
+}
 void AShootingGameCharacter::OnResetVR()
 {
 	// If ShootingGame is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in ShootingGame.Build.cs is not automatically propagated
@@ -455,6 +482,26 @@ void AShootingGameCharacter::Menu()
 				}
 			}
 		}
+		else
+		{
+		
+			this->Destroy();
+
+			if (WBP_DontOut)
+			{
+				// Create the UI widget
+				UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_DontOut);
+				if (WBP_DontOut)
+				{
+					// Add the UI widget to the viewport
+					MyBlueprintUIWidget->AddToViewport();
+					APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+					MyController->SetInputMode(FInputModeUIOnly());
+					MyController->bShowMouseCursor = true;
+				}
+			}
+			
+		}
 		
 	}
 	CharacterCount = 0;
@@ -478,26 +525,24 @@ void AShootingGameCharacter::Menu()
 
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow,
-		FString::Printf(TEXT("Char %d"), CharacterCount));
-
+	
 
 	if (1 == CharacterCount)
 	{
-		if (WBP_GameOver)
-		{
-			// Create the UI widget
-			UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
-			if (WBP_GameOver)
-			{
-				// Add the UI widget to the viewport
-				MyBlueprintUIWidget->AddToViewport();
-				APlayerController* MyController = GetWorld()->GetFirstPlayerController();
-				MyController->SetInputMode(FInputModeUIOnly());
-				MyController->bShowMouseCursor = true;
-			}
-		}
-
+		ReqGameEnd();
+		//if (WBP_GameOver)
+		//{
+		//	// Create the UI widget
+		//	UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
+		//	if (WBP_GameOver)
+		//	{
+		//		// Add the UI widget to the viewport
+		//		MyBlueprintUIWidget->AddToViewport();
+		//		APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+		//		MyController->SetInputMode(FInputModeUIOnly());
+		//		MyController->bShowMouseCursor = true;
+		//	}
+		//}
 	}
 
 

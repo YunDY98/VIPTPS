@@ -75,6 +75,25 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void ResDropWeapon();
 
+
+	UFUNCTION(Server, Reliable)
+		void ResGameEnd();
+
+
+	UFUNCTION(NetMulticast, Reliable)
+		void ReqGameEnd();
+
+
+
+
+		
+
+
+	
+
+
+
+
 protected:
 
 	/** Resets HMD orientation in VR. */
@@ -211,7 +230,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 		TSubclassOf<UUserWidget> WBP_GameOver;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+		TSubclassOf<UUserWidget> WBP_DontOut;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+		TSubclassOf<UUserWidget> WBP_GameEnd;
+
 	int32 CharacterCount = 0;
+
+	
+
 
 	
 	
