@@ -14,3 +14,4 @@ FName UShootingGameInstance::GetWeaponRandomRowName()
 	FName WeaponName = names[FMath::RandRange(0, names.Num() - 1)];
 	return WeaponName;
 }
+

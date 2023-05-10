@@ -43,6 +43,8 @@ public:
 	FORCEINLINE bool IsCanUseMag() const { return ( Mag > 0 ) ? true : false; }
 
 public:
+
+
 	UFUNCTION()
 	void OnRep_CurHp();
 

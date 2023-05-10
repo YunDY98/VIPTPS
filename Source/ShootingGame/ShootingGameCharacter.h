@@ -22,9 +22,13 @@ class AShootingGameCharacter : public ACharacter, public IItemInterface
 public:
 	AShootingGameCharacter();
 
+	
+
 public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -116,6 +120,8 @@ protected:
 
 	void PressMagTest();
 
+	void Menu();
+
 	UFUNCTION()
 	void OnRep_EquipWeapon();
 
@@ -161,6 +167,9 @@ public:
 
 	void OnUpdateHp_Implementation(float CurrentHp, float MaxHp);
 
+	
+
+
 	UFUNCTION(BlueprintCallable)
 	void DoRagdoll();
 
@@ -176,6 +185,9 @@ public:
 	void AddMag();
 
 	virtual void AddMag_Implementation() override;
+
+	
+	
 
 private:
 	AActor* EquipWeapon;
@@ -195,5 +207,13 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* NameTagWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+		TSubclassOf<UUserWidget> WBP_GameOver;
+
+	int32 CharacterCount = 0;
+
+	
+	
 };
 

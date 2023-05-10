@@ -22,6 +22,10 @@
 //////////////////////////////////////////////////////////////////////////
 // AShootingGameCharacter
 
+
+
+
+//
 AShootingGameCharacter::AShootingGameCharacter()
 {
 	// Set size for collision capsule
@@ -67,6 +71,9 @@ void AShootingGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
+
+	
 	BindPlayerState();
 }
 
@@ -82,7 +89,15 @@ void AShootingGameCharacter::Tick(float DeltaTime)
 	if (IsRagdoll)
 	{
 		SetActorLocation(GetMesh()->GetSocketLocation("spine_01") + FVector(0.0f, 0.0f, 60.0f));
+
+		
 	}
+
+	
+	
+	
+	
+	
 }
 
 float AShootingGameCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -164,7 +179,10 @@ void AShootingGameCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 
 	// MagTest
 	PlayerInputComponent->BindAction("MagTest", IE_Pressed, this, &AShootingGameCharacter::PressMagTest);
+
+	PlayerInputComponent->BindAction("Menu", IE_Pressed, this, &AShootingGameCharacter::Menu);
 }
+
 
 AActor* AShootingGameCharacter::SetEquipWeapon(AActor* Weapon)
 {
@@ -208,12 +226,21 @@ void AShootingGameCharacter::OnUpdateHp_Implementation(float CurrentHp, float Ma
 	if (CurrentHp <= 0)
 	{
 		DoRagdoll();
+		
+		
+		//this->Destroy();
+		
+		
 	}
 }
 
 void AShootingGameCharacter::DoRagdoll()
 {
 	IsRagdoll = true;
+	
+	
+	
+
 
 	GetMesh()->SetSimulatePhysics(true);
 }
@@ -248,6 +275,8 @@ void AShootingGameCharacter::AddMag_Implementation()
 		ps->AddMag();
 	}
 }
+
+
 
 void AShootingGameCharacter::ReqPressTrigger_Implementation(bool isPressed)
 {
@@ -346,6 +375,7 @@ void AShootingGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector
 void AShootingGameCharacter::PressTrigger()
 {
 	ReqPressTrigger(true);
+	
 }
 
 void AShootingGameCharacter::ReleaseTrigger()
@@ -399,6 +429,79 @@ void AShootingGameCharacter::PressMagTest()
 	{
 		ps->AddMag();
 	}
+}
+
+void AShootingGameCharacter::Menu()
+{
+	
+	if (IsRagdoll)
+	{
+		if (!HasAuthority())
+		{
+
+
+
+			if (WBP_GameOver)
+			{
+				// Create the UI widget
+				UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
+				if (WBP_GameOver)
+				{
+					// Add the UI widget to the viewport
+					MyBlueprintUIWidget->AddToViewport();
+					APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+					MyController->SetInputMode(FInputModeUIOnly());
+					MyController->bShowMouseCursor = true;
+				}
+			}
+		}
+		
+	}
+	CharacterCount = 0;
+	// Get a reference to the current level
+	ULevel* CurrentLevel = GetWorld()->GetCurrentLevel();
+
+
+	// Iterate over all actors in the level and count the number of characters
+	for (AActor* Actor : CurrentLevel->Actors)
+	{
+
+
+		if (ACharacter* Character = Cast<ACharacter>(Actor))
+		{
+			CharacterCount++;
+		}
+
+
+
+
+
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow,
+		FString::Printf(TEXT("Char %d"), CharacterCount));
+
+
+	if (1 == CharacterCount)
+	{
+		if (WBP_GameOver)
+		{
+			// Create the UI widget
+			UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
+			if (WBP_GameOver)
+			{
+				// Add the UI widget to the viewport
+				MyBlueprintUIWidget->AddToViewport();
+				APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+				MyController->SetInputMode(FInputModeUIOnly());
+				MyController->bShowMouseCursor = true;
+			}
+		}
+
+	}
+
+
+	
 }
 
 void AShootingGameCharacter::ReqDropWeapon_Implementation()
@@ -527,4 +630,6 @@ void AShootingGameCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+	
 }
+
