@@ -79,3 +79,11 @@ bool AShootingPlayerState::UseMag()
 
 	return result;
 }
+
+float AShootingPlayerState::MyCurHp()
+{
+
+
+
+	return CurHp;
+}
