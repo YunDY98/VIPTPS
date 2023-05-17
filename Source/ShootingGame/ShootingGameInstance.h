@@ -20,8 +20,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* WeaponTable;
 
-	int CharCount;
-
 	FST_Weapon* GetWeaponRowData(FName name);
 
 	FName GetWeaponRandomRowName();

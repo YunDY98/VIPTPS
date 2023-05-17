@@ -238,19 +238,7 @@ public:
 
 	int32 CharacterCount = 0;
 
-	UFUNCTION()
-	void LoadLevel();
-
-	UFUNCTION()
-		void LoadLevelDelay();
-
-	void MyCurHp();
 	
-	int CharCount();
-
-	void Winner();
-
-	bool UiCheck = true;
 
 
 	

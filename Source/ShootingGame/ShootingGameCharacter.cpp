@@ -15,9 +15,6 @@
 #include "TimerManager.h"
 #include "Blueprint/UserWidget.h"
 #include "NameTagInterface.h"
-#include "Kismet/GameplayStatics.h"
-#include "Engine/GameInstance.h"
-#include "ShootingGameInstance.h"
 //#include "NiagaraComponent.h"  // 나이아가라 컴포넌트 헤더 파일
 //#include "NiagaraFunctionLibrary.h"  // 나이아가라 함수 라이브러리 헤더 파일
 //#include "NiagaraSystem.h"  // 나이아가라 시스템 헤더 파일
@@ -74,23 +71,8 @@ void AShootingGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// UGameplayStatics를 사용하여 현재 게임 인스턴스에 액세스합니다.
-	UGameInstance* CurrentGameInstance = GetGameInstance();
-
-	// 해당 클래스로 캐스팅하기 전에, 게임 인스턴스가 널(null)이 아닌지 확인합니다.
-	if (CurrentGameInstance)
-	{
-		// 현재 게임 인스턴스를 사용자 지정 게임 인스턴스 클래스(예: MyGameInstance)로 캐스팅합니다.
-		UShootingGameInstance* GameInstance = Cast<UShootingGameInstance>(CurrentGameInstance);
-
-		// 캐스팅이 성공적으로 수행된 경우, CustomGameInstance 변수를 사용하여 사용자 지정 게임 인스턴스에 액세스할 수 있습니다.
-		if (GameInstance)
-		{
-			// 여기에 사용자 지정 게임 인스턴스 클래스 내 함수 호출 및 기타 작업을 수행할 수 있습니다.
-			GameInstance->CharCount = CharCount();
-		}
-	}
 	
+
 	
 	BindPlayerState();
 }
@@ -111,6 +93,7 @@ void AShootingGameCharacter::Tick(float DeltaTime)
 		
 	}
 
+	
 	
 	
 	
@@ -242,43 +225,10 @@ void AShootingGameCharacter::OnUpdateHp_Implementation(float CurrentHp, float Ma
 
 	if (CurrentHp <= 0)
 	{
-		//this->Destroy();
 		DoRagdoll();
 		
-		if (!HasAuthority())
-		{
-			MyCurHp();
-		}
-
-		//if (CharCount() <= 2 && HasAuthority())
-
-		//{
-		//	this->Destroy();
-		//}
 		
-		// UGameplayStatics를 사용하여 현재 게임 인스턴스에 액세스합니다.
-		UGameInstance* CurrentGameInstance = GetGameInstance();
-
-		// 해당 클래스로 캐스팅하기 전에, 게임 인스턴스가 널(null)이 아닌지 확인합니다.
-		if (CurrentGameInstance)
-		{
-			// 현재 게임 인스턴스를 사용자 지정 게임 인스턴스 클래스(예: MyGameInstance)로 캐스팅합니다.
-			UShootingGameInstance* GameInstance = Cast<UShootingGameInstance>(CurrentGameInstance);
-
-			// 캐스팅이 성공적으로 수행된 경우, CustomGameInstance 변수를 사용하여 사용자 지정 게임 인스턴스에 액세스할 수 있습니다.
-			if (GameInstance)
-			{
-				// 여기에 사용자 지정 게임 인스턴스 클래스 내 함수 호출 및 기타 작업을 수행할 수 있습니다.
-				GameInstance->CharCount -= 1;
-				if (GameInstance->CharCount <= 2 && HasAuthority())
-				{
-					//this->Destroy();
-				}
-
-				
-			}
-		}
-
+		//this->Destroy();
 		
 		
 	}
@@ -413,11 +363,11 @@ void AShootingGameCharacter::ReqGameEnd_Implementation()
 
 void AShootingGameCharacter::ResGameEnd_Implementation()
 {
-	if (WBP_GameOver)
+	if (WBP_GameEnd)
 	{
 		// Create the UI widget
-		UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
-		if (WBP_GameOver)
+		UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameEnd);
+		if (WBP_GameEnd)
 		{
 			// Add the UI widget to the viewport
 			MyBlueprintUIWidget->AddToViewport();
@@ -510,7 +460,7 @@ void AShootingGameCharacter::PressMagTest()
 
 void AShootingGameCharacter::Menu()
 {
-	Winner();
+	
 	if (IsRagdoll)
 	{
 		if (!HasAuthority())
@@ -554,50 +504,48 @@ void AShootingGameCharacter::Menu()
 		}
 		
 	}
-	
+	CharacterCount = 0;
 	// Get a reference to the current level
+	ULevel* CurrentLevel = GetWorld()->GetCurrentLevel();
 
+
+	// Iterate over all actors in the level and count the number of characters
+	for (AActor* Actor : CurrentLevel->Actors)
+	{
+
+
+		if (ACharacter* Character = Cast<ACharacter>(Actor))
+		{
+			CharacterCount++;
+		}
+
+
+
+
+
+	}
 
 	
-	//UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
-	//if (WBP_GameOver)
-	//{
-	//	APlayerController* MyController = GetWorld()->GetFirstPlayerController();
-	//	
-	//	if (UiCheck)
-	//	{
-	//		// Add the UI widget to the viewport
-	//		MyBlueprintUIWidget->AddToViewport();
 
-	//		FInputModeUIOnly InputModeUIOnly;
-	//		InputModeUIOnly.SetWidgetToFocus(MyBlueprintUIWidget->TakeWidget());
-	//		InputModeUIOnly.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
-
-	//		MyController->SetInputMode(InputModeUIOnly);
-	//		MyController->bShowMouseCursor = true;
-	//		UiCheck = false;
-	//	}
-	//	else
-	//	{
-	//		MyBlueprintUIWidget->RemoveFromViewport();
-
-	//		FInputModeGameOnly InputModeGameOnly;
-	//		MyController->SetInputMode(InputModeGameOnly);
-
-	//		MyController->bShowMouseCursor = false;
-	//		UiCheck = true;
-	//	}
-	//		
-	//		
-	//	
-			
-		
-			
-		
+	if (1 == CharacterCount)
+	{
+		ReqGameEnd();
+		//if (WBP_GameOver)
+		//{
+		//	// Create the UI widget
+		//	UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
+		//	if (WBP_GameOver)
+		//	{
+		//		// Add the UI widget to the viewport
+		//		MyBlueprintUIWidget->AddToViewport();
+		//		APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+		//		MyController->SetInputMode(FInputModeUIOnly());
+		//		MyController->bShowMouseCursor = true;
+		//	}
+		//}
 	}
 
 
-	
 	
 }
 
@@ -729,159 +677,4 @@ void AShootingGameCharacter::MoveRight(float Value)
 	}
 	
 }
-
-void  AShootingGameCharacter::LoadLevel()
-{
-	
-	UWorld* World = GetWorld(); // 현재 월드 얻기
-	if (World)
-	{
-		FString LevelToLoad = "Entry"; // 여기에 원하는 레벨 이름 적기
-		UGameplayStatics::OpenLevel(World, FName(*LevelToLoad));
-	}
-	
-	
-}
-
-void AShootingGameCharacter::LoadLevelDelay()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow,
-		FString::Printf(TEXT("delatyasfddddddddddddddddd")));
-
-
-	float DelaySeconds = 3.0f;
-
-
-	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AShootingGameCharacter::LoadLevel, 3.0f, false);
-}
-
-void AShootingGameCharacter::MyCurHp()
-{
-	
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if (PlayerController)
-	{
-		AShootingPlayerState* CustomPlayerState = Cast<AShootingPlayerState>(PlayerController->PlayerState);
-		if (CustomPlayerState)
-		{
-			if (0 >= CustomPlayerState->MyCurHp())
-			{
-				LoadLevel();
-			}
-			// UGameplayStatics를 사용하여 현재 게임 인스턴스에 액세스합니다.
-			UGameInstance* CurrentGameInstance = GetGameInstance();
-
-			// 해당 클래스로 캐스팅하기 전에, 게임 인스턴스가 널(null)이 아닌지 확인합니다.
-			if (CurrentGameInstance)
-			{
-				// 현재 게임 인스턴스를 사용자 지정 게임 인스턴스 클래스(예: MyGameInstance)로 캐스팅합니다.
-				UShootingGameInstance* GameInstance = Cast<UShootingGameInstance>(CurrentGameInstance);
-
-				// 캐스팅이 성공적으로 수행된 경우, CustomGameInstance 변수를 사용하여 사용자 지정 게임 인스턴스에 액세스할 수 있습니다.
-				if (GameInstance)
-				{
-					// 여기에 사용자 지정 게임 인스턴스 클래스 내 함수 호출 및 기타 작업을 수행할 수 있습니다.
-					
-					if (GameInstance->CharCount==1 &&(0 < CustomPlayerState->MyCurHp()))
-					{
-						
-							Winner();
-		
-						
-					}
-
-
-				}
-			}
-			
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("CustomPlayerState 캐스팅에 실패했습니다."));
-		}
-	}
-}
-
-int AShootingGameCharacter::CharCount()
-{
-	ULevel* CurrentLevel = GetWorld()->GetCurrentLevel();
-	CharacterCount = 0;
-
-	// Iterate over all actors in the level and count the number of characters
-	for (AActor* Actor : CurrentLevel->Actors)
-	{
-
-
-		if (ACharacter* Character = Cast<ACharacter>(Actor))
-		{
-			CharacterCount++;
-		}
-
-
-
-
-
-	}
-	return CharacterCount;
-}
-
-void AShootingGameCharacter::Winner()
-{
-	// UGameplayStatics를 사용하여 현재 게임 인스턴스에 액세스합니다.
-	UGameInstance* CurrentGameInstance = GetGameInstance();
-	
-	// 해당 클래스로 캐스팅하기 전에, 게임 인스턴스가 널(null)이 아닌지 확인합니다.
-	if (CurrentGameInstance)
-	{
-		// 현재 게임 인스턴스를 사용자 지정 게임 인스턴스 클래스(예: MyGameInstance)로 캐스팅합니다.
-		UShootingGameInstance* GameInstance = Cast<UShootingGameInstance>(CurrentGameInstance);
-
-		if (GameInstance->CharCount == 1)
-		{
-
-			ReqGameEnd();
-			if (WBP_GameEnd)
-			{
-				// Create the UI widget
-				UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameEnd);
-				if (WBP_GameEnd)
-				{
-					APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-					if (PlayerController)
-					{
-						AShootingPlayerState* CustomPlayerState = Cast<AShootingPlayerState>(PlayerController->PlayerState);
-						if (CustomPlayerState)
-						{
-							if (0 < CustomPlayerState->MyCurHp())
-							{
-								// Add the UI widget to the viewport
-								MyBlueprintUIWidget->AddToViewport();
-								APlayerController* MyController = GetWorld()->GetFirstPlayerController();
-								MyController->SetInputMode(FInputModeUIOnly());
-								MyController->bShowMouseCursor = true;
-							}
-						}
-						else
-						{
-							UE_LOG(LogTemp, Warning, TEXT("CustomPlayerState 캐스팅에 실패했습니다."));
-						}
-					}
-
-
-				}
-			}
-
-
-		}
-	}
-
-	
-	/*UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameEnd);
-	MyBlueprintUIWidget->AddToViewport();
-	APlayerController* MyController = GetWorld()->GetFirstPlayerController();
-	MyController->SetInputMode(FInputModeUIOnly());
-	MyController->bShowMouseCursor = true;*/
-}
-
 

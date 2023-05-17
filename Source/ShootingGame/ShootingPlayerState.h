@@ -30,8 +30,6 @@ protected:
 	int Mag;
 
 public:
-	
-
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE float GetCurHp() const { return CurHp; }
 
@@ -67,9 +65,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool UseMag();
-
-	UFUNCTION()
-		float MyCurHp();
 
 	FDele_Multi_UpdateHp_TwoParams Fuc_Dele_UpdateHp_TwoParams;
 	FDele_Multi_UpdateMag_OneParam Fuc_Dele_UpdateMag_OneParam;
