@@ -95,6 +95,7 @@ public:
 
 
 protected:
+	bool MenuCheck = true;
 
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();
@@ -235,6 +236,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 		TSubclassOf<UUserWidget> WBP_GameEnd;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+		TSubclassOf<UUserWidget> WBP_GameWinner;
 
 	int32 CharacterCount = 0;
 

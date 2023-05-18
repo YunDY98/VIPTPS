@@ -226,9 +226,11 @@ void AShootingGameCharacter::OnUpdateHp_Implementation(float CurrentHp, float Ma
 	if (CurrentHp <= 0)
 	{
 		DoRagdoll();
+
+		// 캐릭터 도배 하기
 		
+
 		
-		//this->Destroy();
 		
 		
 	}
@@ -357,7 +359,7 @@ void AShootingGameCharacter::ResPickUp_Implementation(AActor* weapon)
 
 void AShootingGameCharacter::ReqGameEnd_Implementation()
 {
-	ResGameEnd();
+	ReqGameEnd();
 
 }
 
@@ -378,6 +380,10 @@ void AShootingGameCharacter::ResGameEnd_Implementation()
 	}
 	
 }
+
+
+
+
 void AShootingGameCharacter::OnResetVR()
 {
 	// If ShootingGame is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in ShootingGame.Build.cs is not automatically propagated
@@ -460,90 +466,126 @@ void AShootingGameCharacter::PressMagTest()
 
 void AShootingGameCharacter::Menu()
 {
-	
-	if (IsRagdoll)
-	{
-		if (!HasAuthority())
-		{
+	//if (MenuCheck == true)
+	//{
+	//	if (!HasAuthority())
+	//	{
+	//		if (WBP_GameOver)
+	//		{
+	//			// Create the UI widget
+	//			UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
+	//			if (WBP_GameOver)
+	//			{
+	//				// Add the UI widget to the viewport
+	//				MyBlueprintUIWidget->AddToViewport();
+	//				APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+	//				MyController->SetInputMode(FInputModeGameAndUI());
+	//				MyController->bShowMouseCursor = true;
+	//			}
+	//		}
+	//	}
+	//	MenuCheck = false;
+	//}
+	//else
+	//{
 
+	//	UUserWidget* ExistingWidget = nullptr;
+	//	for (TObjectIterator<UUserWidget> Itr; Itr; ++Itr)
+	//	{
+	//		if (Itr->GetClass() == WBP_GameOver)
+	//		{
+	//			ExistingWidget = *Itr;
+	//			break;
+	//		}
+	//	}
 
+	//	if (ExistingWidget)
+	//	{
+	//		ExistingWidget->RemoveFromParent();
+	//		APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+	//		MyController->SetInputMode(FInputModeGameOnly());
+	//		MyController->bShowMouseCursor = false;
 
-			if (WBP_GameOver)
-			{
-				// Create the UI widget
-				UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
-				if (WBP_GameOver)
-				{
-					// Add the UI widget to the viewport
-					MyBlueprintUIWidget->AddToViewport();
-					APlayerController* MyController = GetWorld()->GetFirstPlayerController();
-					MyController->SetInputMode(FInputModeUIOnly());
-					MyController->bShowMouseCursor = true;
-				}
-			}
-		}
-		else
-		{
-		
-			this->Destroy();
+	//		MenuCheck = true;
+	//	}
 
-			if (WBP_DontOut)
-			{
-				// Create the UI widget
-				UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_DontOut);
-				if (WBP_DontOut)
-				{
-					// Add the UI widget to the viewport
-					MyBlueprintUIWidget->AddToViewport();
-					APlayerController* MyController = GetWorld()->GetFirstPlayerController();
-					MyController->SetInputMode(FInputModeUIOnly());
-					MyController->bShowMouseCursor = true;
-				}
-			}
-			
-		}
-		
-	}
-	CharacterCount = 0;
-	// Get a reference to the current level
-	ULevel* CurrentLevel = GetWorld()->GetCurrentLevel();
-
-
-	// Iterate over all actors in the level and count the number of characters
-	for (AActor* Actor : CurrentLevel->Actors)
-	{
-
-
-		if (ACharacter* Character = Cast<ACharacter>(Actor))
-		{
-			CharacterCount++;
-		}
-
-
-
-
-
-	}
+	//}
 
 	
+	
+	//if (IsRagdoll)
+	//{
+	//	if (!HasAuthority())
+	//	{
 
-	if (1 == CharacterCount)
-	{
-		ReqGameEnd();
-		//if (WBP_GameOver)
-		//{
-		//	// Create the UI widget
-		//	UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
-		//	if (WBP_GameOver)
-		//	{
-		//		// Add the UI widget to the viewport
-		//		MyBlueprintUIWidget->AddToViewport();
-		//		APlayerController* MyController = GetWorld()->GetFirstPlayerController();
-		//		MyController->SetInputMode(FInputModeUIOnly());
-		//		MyController->bShowMouseCursor = true;
-		//	}
-		//}
-	}
+
+
+	//		if (WBP_GameOver)
+	//		{
+	//			// Create the UI widget
+	//			UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameOver);
+	//			if (WBP_GameOver)
+	//			{
+	//				// Add the UI widget to the viewport
+	//				MyBlueprintUIWidget->AddToViewport();
+	//				APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+	//				MyController->SetInputMode(FInputModeUIOnly());
+	//				MyController->bShowMouseCursor = true;
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
+	//	
+	//		this->Destroy();
+
+	//		if (WBP_DontOut)
+	//		{
+	//			// Create the UI widget
+	//			UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_DontOut);
+	//			if (WBP_DontOut)
+	//			{
+	//				// Add the UI widget to the viewport
+	//				MyBlueprintUIWidget->AddToViewport();
+	//				APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+	//				MyController->SetInputMode(FInputModeUIOnly());
+	//				MyController->bShowMouseCursor = true;
+	//			}
+	//		}
+	//		
+	//	}
+	//	
+	//}
+	//CharacterCount = 0;
+	//// Get a reference to the current level
+	//ULevel* CurrentLevel = GetWorld()->GetCurrentLevel();
+
+
+	//// Iterate over all actors in the level and count the number of characters
+	//for (AActor* Actor : CurrentLevel->Actors)
+	//{
+
+
+	//	if (ACharacter* Character = Cast<ACharacter>(Actor))
+	//	{
+	//		CharacterCount++;
+	//	}
+
+
+
+
+
+	//}
+
+	//
+
+	//if (1 == CharacterCount)
+	//{
+	//	ReqGameEnd();
+
+	//	
+	//	
+	//}
 
 
 	

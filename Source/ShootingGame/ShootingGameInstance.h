@@ -23,4 +23,6 @@ public:
 	FST_Weapon* GetWeaponRowData(FName name);
 
 	FName GetWeaponRandomRowName();
+
+	void HostLeaving();
 };
