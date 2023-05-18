@@ -5,6 +5,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Kismet/GameplayStatics.h"
 #include "ShootingGameHUD.h"
+#include "TimerManager.h"
 
 void AShootingPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
@@ -22,6 +23,10 @@ AShootingPlayerState::AShootingPlayerState()
 }
 
 
+
+
+
+	
 
 void AShootingPlayerState::OnRep_CurHp()
 {

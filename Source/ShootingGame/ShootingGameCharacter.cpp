@@ -15,6 +15,9 @@
 #include "TimerManager.h"
 #include "Blueprint/UserWidget.h"
 #include "NameTagInterface.h"
+#include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "ShootingGameInstance.h"
 //#include "NiagaraComponent.h"  // 나이아가라 컴포넌트 헤더 파일
 //#include "NiagaraFunctionLibrary.h"  // 나이아가라 함수 라이브러리 헤더 파일
 //#include "NiagaraSystem.h"  // 나이아가라 시스템 헤더 파일
@@ -71,8 +74,8 @@ void AShootingGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CharCnt();
 	
-
 	
 	BindPlayerState();
 }
@@ -90,6 +93,15 @@ void AShootingGameCharacter::Tick(float DeltaTime)
 	{
 		SetActorLocation(GetMesh()->GetSocketLocation("spine_01") + FVector(0.0f, 0.0f, 60.0f));
 
+		
+	}
+
+	UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
+
+	if (Gi)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
+			FString::Printf(TEXT("count %d"), Gi->CharCount));
 		
 	}
 
@@ -227,10 +239,9 @@ void AShootingGameCharacter::OnUpdateHp_Implementation(float CurrentHp, float Ma
 	{
 		DoRagdoll();
 
-		// 캐릭터 도배 하기
 		
 
-		
+	
 		
 		
 	}
@@ -239,8 +250,18 @@ void AShootingGameCharacter::OnUpdateHp_Implementation(float CurrentHp, float Ma
 void AShootingGameCharacter::DoRagdoll()
 {
 	IsRagdoll = true;
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
-	
+	UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
+
+	if (Gi)
+	{
+		Gi->CharCount -= 1;
+		if (Gi->CharCount == 1)
+		{
+			ReqGameEnd();
+		}
+	}
 	
 
 
@@ -277,6 +298,37 @@ void AShootingGameCharacter::AddMag_Implementation()
 		ps->AddMag();
 	}
 }
+
+void AShootingGameCharacter::CharCnt()
+{
+
+	ULevel* CurrentLevel = GetWorld()->GetCurrentLevel();
+
+	CharacterCount = 0;
+	// Iterate over all actors in the level and count the number of characters
+	for (AActor* Actor : CurrentLevel->Actors)
+	{
+		
+
+		if (ACharacter* Character = Cast<ACharacter>(Actor))
+		{
+			CharacterCount++;
+		}
+	}
+	UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
+
+	if (Gi)
+	{
+		Gi->CharCount = CharacterCount;
+	}
+
+		
+
+	
+	
+}
+
+
 
 
 
@@ -359,7 +411,7 @@ void AShootingGameCharacter::ResPickUp_Implementation(AActor* weapon)
 
 void AShootingGameCharacter::ReqGameEnd_Implementation()
 {
-	ReqGameEnd();
+	ResGameEnd();
 
 }
 

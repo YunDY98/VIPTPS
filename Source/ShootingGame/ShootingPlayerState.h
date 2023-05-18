@@ -45,6 +45,9 @@ public:
 public:
 
 
+
+	FTimerHandle TimerHandle;
+
 	UFUNCTION()
 	void OnRep_CurHp();
 

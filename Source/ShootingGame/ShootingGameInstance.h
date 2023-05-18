@@ -24,5 +24,5 @@ public:
 
 	FName GetWeaponRandomRowName();
 
-	void HostLeaving();
+	int32 CharCount;
 };

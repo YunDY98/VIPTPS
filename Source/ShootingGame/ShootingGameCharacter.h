@@ -77,11 +77,11 @@ public:
 
 
 	UFUNCTION(Server, Reliable)
-		void ResGameEnd();
+		void ReqGameEnd();
 
 
 	UFUNCTION(NetMulticast, Reliable)
-		void ReqGameEnd();
+		void ResGameEnd();
 
 
 
@@ -221,6 +221,7 @@ private:
 
 	FTimerHandle th_BindPlayerState;
 
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UUserWidget> NameTagWidgetClass;
@@ -241,6 +242,9 @@ public:
 		TSubclassOf<UUserWidget> WBP_GameWinner;
 
 	int32 CharacterCount = 0;
+
+	void CharCnt();
+
 
 	
 
