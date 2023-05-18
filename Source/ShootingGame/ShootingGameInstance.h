@@ -24,5 +24,6 @@ public:
 
 	FName GetWeaponRandomRowName();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 CharCount;
 };

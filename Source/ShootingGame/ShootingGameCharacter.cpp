@@ -100,8 +100,8 @@ void AShootingGameCharacter::Tick(float DeltaTime)
 
 	if (Gi)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
-			FString::Printf(TEXT("count %d"), Gi->CharCount));
+		/*GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
+			FString::Printf(TEXT("count %d"), Gi->CharCount));*/
 		
 	}
 
@@ -250,8 +250,13 @@ void AShootingGameCharacter::OnUpdateHp_Implementation(float CurrentHp, float Ma
 void AShootingGameCharacter::DoRagdoll()
 {
 	IsRagdoll = true;
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+	UPrimitiveComponent* CollisionComponent = GetCapsuleComponent();
+
+	// 콜리전 컴포넌트가 유효한지 확인합니다.
+	if (CollisionComponent)
+	{
+		CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 	UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
 
 	if (Gi)
