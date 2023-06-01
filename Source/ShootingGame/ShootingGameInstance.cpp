@@ -15,3 +15,6 @@ FName UShootingGameInstance::GetWeaponRandomRowName()
 	return WeaponName;
 }
 
+
+
+

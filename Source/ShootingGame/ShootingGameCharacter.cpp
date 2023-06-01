@@ -18,6 +18,9 @@
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "ShootingGameInstance.h"
+#include "ShootingGameStateBase.h"
+#include "GameFramework/GameModeBase.h"
+#include "CountActor.h"
 //#include "NiagaraComponent.h"  // 나이아가라 컴포넌트 헤더 파일
 //#include "NiagaraFunctionLibrary.h"  // 나이아가라 함수 라이브러리 헤더 파일
 //#include "NiagaraSystem.h"  // 나이아가라 시스템 헤더 파일
@@ -73,8 +76,8 @@ AShootingGameCharacter::AShootingGameCharacter()
 void AShootingGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	CharCnt();
+	//CharCnt();
+	
 	
 	
 	BindPlayerState();
@@ -100,15 +103,26 @@ void AShootingGameCharacter::Tick(float DeltaTime)
 
 	if (Gi)
 	{
-		/*GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
-			FString::Printf(TEXT("count %d"), Gi->CharCount));*/
+		/*GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red,
+			FString::Printf(TEXT("live %d"), Current));*/
+		
+	}
+
+	// 현재 게임 스테이트 가져오기
+	AGameStateBase* CurrentGameState = GetWorld()->GetGameState();
+
+	// 게임 스테이트 캐스팅
+	AShootingGameStateBase* MyGameState = Cast<AShootingGameStateBase>(CurrentGameState);
+	if (MyGameState)
+	{
+		
 		
 	}
 
 	
 	
 	
-	
+	//ReqCharCount();
 	
 }
 
@@ -257,7 +271,7 @@ void AShootingGameCharacter::DoRagdoll()
 	{
 		CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
-	UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
+	/*UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
 
 	if (Gi)
 	{
@@ -266,7 +280,53 @@ void AShootingGameCharacter::DoRagdoll()
 		{
 			ReqGameEnd();
 		}
+	}*/
+
+	//// 현재 게임 스테이트 가져오기
+	//AGameStateBase* CurrentGameState = GetWorld()->GetGameState();
+
+	//// 게임 스테이트 캐스팅
+	//AShootingGameStateBase* MyGameState = Cast<AShootingGameStateBase>(CurrentGameState);
+	//if (MyGameState)
+	//{
+	//	
+	//	MyGameState->charcount -= 1;
+	//	if (MyGameState->charcount == 1)
+	//	{
+	//		
+	//	}
+	//}
+	
+	if (WBP_GameEnd)
+	{
+		// Create the UI widget
+		UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_GameEnd);
+		if (WBP_GameEnd)
+		{
+			// Add the UI widget to the viewport
+			MyBlueprintUIWidget->AddToViewport();
+			APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+			MyController->SetInputMode(FInputModeUIOnly());
+			MyController->bShowMouseCursor = true;
+		}
 	}
+	if (HasAuthority())
+	{
+		if (WBP_DontOut)
+		{
+			// Create the UI widget
+			UUserWidget* MyBlueprintUIWidget = CreateWidget<UUserWidget>(GetWorld(), WBP_DontOut);
+			if (WBP_DontOut)
+			{
+				// Add the UI widget to the viewport
+				MyBlueprintUIWidget->AddToViewport();
+				APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+				MyController->SetInputMode(FInputModeUIOnly());
+				MyController->bShowMouseCursor = true;
+			}
+		}
+	}
+	
 	
 
 
@@ -304,34 +364,69 @@ void AShootingGameCharacter::AddMag_Implementation()
 	}
 }
 
-void AShootingGameCharacter::CharCnt()
-{
+//void AShootingGameCharacter::CharCnt()
+//{
+//
+//	ULevel* CurrentLevel = GetWorld()->GetCurrentLevel();
+//
+//	
+//	// Iterate over all actors in the level and count the number of characters
+//	for (AActor* Actor : CurrentLevel->Actors)
+//	{
+//		
+//
+//		if (ACharacter* Character = Cast<ACharacter>(Actor))
+//		{
+//			CharacterCount += 1;
+//			if (Current < CharacterCount)
+//			{
+//				Current = CharacterCount;
+//			}
+//			
+//		}
+//	}
+//	//UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
+//
+//	//if (Gi)
+//	//{
+//	//	Gi->CharCount = CharacterCount;
+//	//}
+//
+//	//AGameStateBase* CurrentGameState = GetWorld()->GetGameState();
+//
+//	//// 게임 스테이트 캐스팅
+//	//AShootingGameStateBase* MyGameState = Cast<AShootingGameStateBase>(CurrentGameState);
+//	//if (MyGameState)
+//	//{
+//	//	MyGameState->charcount = CharacterCount;
+//	//}
+//		
+//
+//	
+//	
+//}
 
-	ULevel* CurrentLevel = GetWorld()->GetCurrentLevel();
 
-	CharacterCount = 0;
-	// Iterate over all actors in the level and count the number of characters
-	for (AActor* Actor : CurrentLevel->Actors)
-	{
-		
 
-		if (ACharacter* Character = Cast<ACharacter>(Actor))
-		{
-			CharacterCount++;
-		}
-	}
-	UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
-
-	if (Gi)
-	{
-		Gi->CharCount = CharacterCount;
-	}
-
-		
-
-	
-	
-}
+//void AShootingGameCharacter::ReqCharCount_Implementation()
+//{
+//	ResCharCount();
+//	
+//}
+//
+//void AShootingGameCharacter::ResCharCount_Implementation()
+//{
+//
+//	UShootingGameInstance* Gi = Cast<UShootingGameInstance>(GetGameInstance());
+//
+//	if (Gi)
+//	{
+//		Gi->CharCount = 4;
+//	}
+//	
+//		
+//	
+//}
 
 
 

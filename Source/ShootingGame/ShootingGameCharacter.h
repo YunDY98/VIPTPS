@@ -241,10 +241,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 		TSubclassOf<UUserWidget> WBP_GameWinner;
 
+	
 	int32 CharacterCount = 0;
 
-	void CharCnt();
+	int32 Current = 4;
 
+	//void CharCnt();
+
+
+	/*UFUNCTION(Server, Reliable)
+		void ReqCharCount();
+
+	UFUNCTION(NetMulticast, Reliable)
+		void ResCharCount();*/
 
 	
 
